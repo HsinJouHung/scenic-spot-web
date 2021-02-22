@@ -6,3 +6,10 @@ import * as types from './types'
 //         payload: name
 //     }
 // }
+
+export function setScenicSpotList(data) {
+    return {
+        type: types.SET_SCENIC_SPOT_LIST,
+        payload: data
+    }
+}
