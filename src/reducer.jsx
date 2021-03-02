@@ -2,7 +2,9 @@ import * as types from './types'
 
 const initState = {
     scenicSpotList: [],
+    currCity: '',
     cities: {
+        '': '臺灣',
         'Taipei': '臺北市',
         'NewTaipei': '新北市',
         'Taoyuan': '桃園市',
@@ -35,6 +37,13 @@ const reducer = (state = initState, { type, payload }) => {
             return {
                 ...state,
                 scenicSpotList: newlist
+            }
+        }
+        case types.SET_CURR_CITY: {
+            let newCity = payload
+            return {
+                ...state,
+                currCity: newCity
             }
         }
         default:

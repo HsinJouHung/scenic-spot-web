@@ -13,15 +13,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import SpotInfoTable from './SpotInfoTable'
-import { useSelector } from 'react-redux';
-import { AddCircleOutlineSharp } from '@material-ui/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrCity } from '../actions';
+import { useHistory } from "react-router-dom"
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,11 +78,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CityDrawer() {
+export default function CityDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(true)
   const cities = useSelector(state => state.cities)
+
+  const dispatch = useDispatch()
+  const history = useHistory()
+  // const city = useSelector(state => state.currCity)
+  const city = props.city
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -93,6 +96,11 @@ export default function CityDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handleCityClicked = (key) => {
+    dispatch(setCurrCity(key))
+    history.push(`scenicSpot/${key}`)
+  }
 
   React.useEffect(() => {
     // console.log('city', cities[0].key)
@@ -117,9 +125,7 @@ export default function CityDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Scenic Spots
-          </Typography>
+          <Typography variant="h6" noWrap>Scenic Spots</Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -139,7 +145,7 @@ export default function CityDrawer() {
         <Divider />
         <List>
           {Object.entries(cities).map(([key, value]) => (
-            <ListItem button key={key}>
+            <ListItem button key={key} onClick = {() => handleCityClicked(key)}>
               <ListItemText primary={value} />
             </ListItem>
           ))}
@@ -160,7 +166,7 @@ export default function CityDrawer() {
         })}
       >
         <div className={classes.drawerHeader} />
-        <SpotInfoTable />
+        <SpotInfoTable city = {props.city}/>
       </main>
     </div>
   );

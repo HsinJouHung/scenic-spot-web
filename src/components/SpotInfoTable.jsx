@@ -13,52 +13,53 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setScenicSpotList } from "../actions";
+
 
 const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    //   textAlign : 'left',
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
     },
-  },
 });
 
 function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const classes = useRowStyles();
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+    const classes = useRowStyles();
 
-  return (
-    <React.Fragment>
-      <TableRow className={classes.root}>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row" style = {{minWidth: '100px'}}>
-          {row.Name}
-        </TableCell>
-        <TableCell>{row.Description}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>
+                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="row" style={{ minWidth: '100px' }}>
+                    {row.Name}
+                </TableCell>
+                <TableCell>{row.Description}</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box margin={1}>
+                            <Typography variant="h6" gutterBottom component="div">
+                                History
               </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                {/* <TableBody>
+                            <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Date</TableCell>
+                                        <TableCell>Customer</TableCell>
+                                        <TableCell align="right">Amount</TableCell>
+                                        <TableCell align="right">Total price ($)</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                {/* <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
@@ -72,13 +73,13 @@ function Row(props) {
                     </TableRow>
                   ))}
                 </TableBody> */}
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    );
 }
 
 // Row.propTypes = {
@@ -99,34 +100,54 @@ function Row(props) {
 //   }).isRequired,
 // };
 
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-//   createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-//   createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-// ];
 
-
-export default function SpotInfoTable() {
+export default function SpotInfoTable(props) {
     const rows = useSelector(state => state.scenicSpotList)
 
+    const dispatch = useDispatch()
+
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+    };
+
+    // const cityName = useSelector(state => state.currCity)
+    const cityName = props.city
+    const cityPath = cityName === '' ? '' : `/${cityName}`
+
+    const getSpots = () => { 
+        fetch('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot'+{cityPath}+'?$top=30&$format=JSON', requestOptions)
+            .then(res => res.json())
+            .then(data => {
+                console.log('data', data)
+                dispatch(setScenicSpotList(data))
+                localStorage.setItem('data', data)
+            })
+            .catch(error => console.error('Error:', error))
+    }
+
+
+    React.useEffect(() => {
+        getSpots()
+        console.log('city', cityName)
+    }, [])
+
     return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Name</TableCell>
-            <TableCell>Description</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+        <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell />
+                        <TableCell>Name</TableCell>
+                        <TableCell>Description</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.map((row) => (
+                        <Row key={row.name} row={row} />
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }

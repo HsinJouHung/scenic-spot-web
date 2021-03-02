@@ -13,3 +13,10 @@ export function setScenicSpotList(data) {
         payload: data
     }
 }
+
+export function setCurrCity(city) {
+    return {
+        type: types.SET_CURR_CITY,
+        payload: city
+    }
+}
