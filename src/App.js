@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Home } from './components';
 import { useSelector } from 'react-redux';
@@ -8,6 +9,10 @@ function App() {
 
   const cities = useSelector(state => state.cities)
 
+  React.useEffect(() => {
+    console.log('cities', cities)
+  })
+
   return (
 
     <div className="App">
@@ -15,9 +20,8 @@ function App() {
         {/* <Navigation /> */}
         <Switch>
           {Object.entries(cities).map(([key, value]) => {
-            const path = `/${key}`
             return (
-              <Route path={path} exact component = {() => <Home city={key} />} />
+              <Route path={`/scenicSpot/${key}`} exact component = {() => <Home city={key} />} />
             )}) }
           <Route path="/scenicSpot" exact component={() => <Home />} />
         </Switch>

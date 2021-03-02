@@ -87,7 +87,7 @@ export default function CityDrawer(props) {
   const dispatch = useDispatch()
   const history = useHistory()
   // const city = useSelector(state => state.currCity)
-  const city = props.city
+  // const city = props.city
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -99,7 +99,7 @@ export default function CityDrawer(props) {
 
   const handleCityClicked = (key) => {
     dispatch(setCurrCity(key))
-    history.push(`scenicSpot/${key}`)
+    history.push(`/scenicSpot/${key}`)
   }
 
   React.useEffect(() => {
