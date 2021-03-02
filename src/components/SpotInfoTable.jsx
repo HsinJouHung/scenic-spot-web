@@ -112,11 +112,12 @@ export default function SpotInfoTable(props) {
     };
 
     // const cityName = useSelector(state => state.currCity)
-    const cityName = props.city
+    const cityName = useSelector(state => state.currCity)
     const cityPath = cityName === '' ? '' : `/${cityName}`
 
     const getSpots = () => { 
-        fetch('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot'+{cityPath}+'?$top=30&$format=JSON', requestOptions)
+        fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=30&$format=JSON`, requestOptions)
+        // fetch('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot?$top=30&$format=JSON', requestOptions)
             .then(res => res.json())
             .then(data => {
                 console.log('data', data)
