@@ -29,6 +29,8 @@ function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
+    const description = row.Description !== undefined ? row.Description : row.DescriptionDetail
+    
 
     return (
         <React.Fragment>
@@ -41,7 +43,7 @@ function Row(props) {
                 <TableCell component="th" scope="row" style={{ minWidth: '100px' }}>
                     {row.Name}
                 </TableCell>
-                <TableCell>{row.Description}</TableCell>
+                <TableCell>{description}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
