@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
@@ -57,9 +56,6 @@ function Row(props) {
                                     <TableRow>
                                         <TableCell>Open Time</TableCell>
                                         <TableCell>Address</TableCell>
-                                        {/* <TableCell>Customer</TableCell>
-                                        <TableCell align="right">Amount</TableCell>
-                                        <TableCell align="right">Total price ($)</TableCell> */}
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -76,25 +72,6 @@ function Row(props) {
     );
 }
 
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     calories: PropTypes.number.isRequired,
-//     carbs: PropTypes.number.isRequired,
-//     fat: PropTypes.number.isRequired,
-//     history: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         amount: PropTypes.number.isRequired,
-//         customerId: PropTypes.string.isRequired,
-//         date: PropTypes.string.isRequired,
-//       }),
-//     ).isRequired,
-//     name: PropTypes.string.isRequired,
-//     price: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired,
-//   }).isRequired,
-// };
-
-
 export default function SpotInfoTable(props) {
     const rows = useSelector(state => state.scenicSpotList)
 
@@ -105,18 +82,16 @@ export default function SpotInfoTable(props) {
         headers: { 'Accept': 'application/json' },
     };
 
-    // const cityName = useSelector(state => state.currCity)
     const cityName = useSelector(state => state.currCity)
     const cityPath = cityName === '' ? '' : `/${cityName}`
 
     const getSpots = () => {
         fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=30&$format=JSON`, requestOptions)
-            // fetch('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot?$top=30&$format=JSON', requestOptions)
             .then(res => res.json())
             .then(data => {
                 console.log('data', data)
                 dispatch(setScenicSpotList(data))
-                localStorage.setItem('data', data)
+                // localStorage.setItem('data', data)
             })
             .catch(error => console.error('Error:', error))
     }
@@ -124,7 +99,6 @@ export default function SpotInfoTable(props) {
 
     React.useEffect(() => {
         getSpots()
-        console.log('city', cityName)
     }, [])
 
     return (

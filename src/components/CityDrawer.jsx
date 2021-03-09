@@ -86,8 +86,7 @@ export default function CityDrawer(props) {
 
   const dispatch = useDispatch()
   const history = useHistory()
-  // const city = useSelector(state => state.currCity)
-  // const city = props.city
+  const city = useSelector(state => state.currCity)
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -103,7 +102,7 @@ export default function CityDrawer(props) {
   }
 
   React.useEffect(() => {
-    // console.log('city', cities[0].key)
+    // console.log('city', chCity.value)
   })
 
   return (
@@ -150,15 +149,6 @@ export default function CityDrawer(props) {
             </ListItem>
           ))}
         </List>
-        {/* <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
       </Drawer>
       <main
         className={clsx(classes.content, {
@@ -166,6 +156,7 @@ export default function CityDrawer(props) {
         })}
       >
         <div className={classes.drawerHeader} />
+        <h2 style = {{'text-align': 'left'}}>{city}</h2>
         <SpotInfoTable city = {props.city}/>
       </main>
     </div>
