@@ -156,7 +156,7 @@ export default function CityDrawer(props) {
         })}
       >
         <div className={classes.drawerHeader} />
-        <h2 style = {{'text-align': 'left'}}>{city}</h2>
+        <h2 style = {{'textAlign': 'left'}}>{city}</h2>
         <SpotInfoTable city = {props.city}/>
       </main>
     </div>

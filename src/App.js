@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { Home } from './components';
 import { useSelector } from 'react-redux';
 
@@ -17,6 +16,7 @@ function App() {
 
     <div className="App">
       <Router>
+      <Redirect from = '/' to = '/scenicSpot'/>
         {/* <Navigation /> */}
         <Switch>
           {Object.entries(cities).map(([key, value]) => {

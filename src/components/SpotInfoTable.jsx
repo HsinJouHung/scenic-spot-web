@@ -81,15 +81,15 @@ export default function SpotInfoTable(props) {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
     };
-
+    
     const cityName = useSelector(state => state.currCity)
     const cityPath = cityName === '' ? '' : `/${cityName}`
-
+    
     const getSpots = () => {
         fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=30&$format=JSON`, requestOptions)
             .then(res => res.json())
             .then(data => {
-                console.log('data', data)
+                console.log('data', cityName)
                 dispatch(setScenicSpotList(data))
                 // localStorage.setItem('data', data)
             })
@@ -99,16 +99,16 @@ export default function SpotInfoTable(props) {
 
     React.useEffect(() => {
         getSpots()
-    }, [])
+    }, [cityName])
 
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
-                        <TableCell />
-                        <TableCell>Name</TableCell>
-                        <TableCell>Description</TableCell>
+                        <TableCell key = 'table-detail'/>
+                        <TableCell key = 'table-city-name'>Name</TableCell>
+                        <TableCell key = 'table-description'>Description</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
