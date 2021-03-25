@@ -89,12 +89,21 @@ export default function SpotInfoTable(props) {
         fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=30&$format=JSON`, requestOptions)
             .then(res => res.json())
             .then(data => {
-                console.log('data', cityName)
+                // console.log('data', cityName)
                 dispatch(setScenicSpotList(data))
                 // localStorage.setItem('data', data)
             })
             .catch(error => console.error('Error:', error))
     }
+
+    const handleOnScroll = (e) => {
+        console.log('scrolling')
+        const target = e.target
+        if(target.scrollHeight - target.scrollTop === target.clientHeight) {
+          console.log('BOTTOM', target.scrollHeight, target.scrollTop, target.clientHeight)
+        }
+        
+      }
 
 
     React.useEffect(() => {
@@ -103,6 +112,7 @@ export default function SpotInfoTable(props) {
 
     return (
         <TableContainer component={Paper}>
+            <div onScroll = {(e) => handleOnScroll(e)}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
@@ -117,6 +127,7 @@ export default function SpotInfoTable(props) {
                     ))}
                 </TableBody>
             </Table>
+            </div>
         </TableContainer>
     );
 }

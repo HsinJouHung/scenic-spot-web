@@ -18,6 +18,7 @@ import SpotInfoTable from './SpotInfoTable'
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrCity } from '../actions';
 import { useHistory } from "react-router-dom"
+import { ContactSupportOutlined } from '@material-ui/icons';
 
 const drawerWidth = 180;
 
@@ -97,16 +98,31 @@ export default function CityDrawer(props) {
   };
 
   const handleCityClicked = (key) => {
-    dispatch(setCurrCity(key))
+    // dispatch(setCurrCity(key))
     history.push(`/scenicSpot/${key}`)
   }
 
+  var isBottom = (el) => {
+    console.log('client', el.getBoundingClientRect().bottom, window.innerHeight)
+    return el.getBoundingClientRect().bottom <= window.innerHeight +1;
+  }
+  
+  const trackScrolling = () => {
+    console.log('sc')
+    const wrappedElement = document.getElementById('drawer-head');
+    if (isBottom(wrappedElement)) {
+      console.log('header bottom reached');
+      document.removeEventListener('scroll', trackScrolling);
+    }
+  };
+
   React.useEffect(() => {
     // console.log('city', chCity.value)
-  })
+    document.addEventListener('scroll', trackScrolling);
+  }, [])
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id = 'drawer-head'>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -144,20 +160,22 @@ export default function CityDrawer(props) {
         <Divider />
         <List>
           {Object.entries(cities).map(([key, value]) => (
-            <ListItem button key={key} onClick = {() => handleCityClicked(key)}>
+            <ListItem button key={key} onClick={() => handleCityClicked(key)}>
               <ListItemText primary={value} />
             </ListItem>
           ))}
         </List>
       </Drawer>
+      {/* <div onScroll = {(e) => handleOnScroll(e)}></div> */}
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}
       >
-        <div className={classes.drawerHeader} />
-        <h2 style = {{'textAlign': 'left'}}>{city}</h2>
-        <SpotInfoTable city = {props.city}/>
+        
+          <div className={classes.drawerHeader} />
+          <h2 style={{ 'textAlign': 'left' }}>{city}</h2>
+          <SpotInfoTable city={props.city} />
       </main>
     </div>
   );
