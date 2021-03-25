@@ -98,22 +98,6 @@ export default function CityDrawer(props) {
     history.push(`/scenicSpot/${key}`)
   }
 
-  var isBottom = (el) => {
-    return el.getBoundingClientRect().bottom <= window.innerHeight +1;
-  }
-
-  const trackScrolling = () => {
-    const wrappedElement = document.getElementById('drawer-head');
-    if (isBottom(wrappedElement)) {
-      console.log('header bottom reached');
-      document.removeEventListener('scroll', trackScrolling);
-    }
-  };
-
-  React.useEffect(() => {
-    document.addEventListener('scroll', trackScrolling);
-  }, [])
-
   return (
     <div className={classes.root} id = 'drawer-head'>
       <CssBaseline />

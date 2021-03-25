@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -76,6 +76,8 @@ export default function SpotInfoTable(props) {
     const rows = useSelector(state => state.scenicSpotList)
 
     const dispatch = useDispatch()
+    const [getTop, setGetTop] = useState(30)
+    const [getSkip, setGetSkip] = useState(0)
 
     const requestOptions = {
         method: 'GET',
@@ -86,19 +88,34 @@ export default function SpotInfoTable(props) {
     const cityPath = cityName === '' ? '' : `/${cityName}`
     
     const getSpots = () => {
-        fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=30&$format=JSON`, requestOptions)
+        fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=${getTop}&$skip=${getSkip}&$format=JSON`, requestOptions)
             .then(res => res.json())
             .then(data => {
-                // console.log('data', cityName)
                 dispatch(setScenicSpotList(data))
-                // localStorage.setItem('data', data)
             })
             .catch(error => console.error('Error:', error))
     }
 
-    React.useEffect(() => {
+    var isBottom = (el) => {
+        return el.getBoundingClientRect().bottom <= window.innerHeight +1;
+      }
+    
+      const trackScrolling = () => {
+        const wrappedElement = document.getElementById('drawer-head');
+        if (isBottom(wrappedElement)) {
+          console.log('header bottom reached');
+        //   getSpots()
+          document.removeEventListener('scroll', trackScrolling);
+        }
+      };
+
+    useEffect(() => {
         getSpots()
     }, [cityName])
+
+    useEffect(() => {
+        document.addEventListener('scroll', trackScrolling);
+    }, [rows])
 
     return (
         <TableContainer component={Paper}>
