@@ -15,10 +15,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SpotInfoTable from './SpotInfoTable'
-import { useSelector, useDispatch } from 'react-redux';
-import { setCurrCity } from '../actions';
+import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom"
-import { ContactSupportOutlined } from '@material-ui/icons';
 
 const drawerWidth = 180;
 
@@ -85,7 +83,6 @@ export default function CityDrawer(props) {
   const [open, setOpen] = React.useState(true)
   const cities = useSelector(state => state.cities)
 
-  const dispatch = useDispatch()
   const history = useHistory()
   const city = useSelector(state => state.currCity)
 
@@ -98,17 +95,14 @@ export default function CityDrawer(props) {
   };
 
   const handleCityClicked = (key) => {
-    // dispatch(setCurrCity(key))
     history.push(`/scenicSpot/${key}`)
   }
 
   var isBottom = (el) => {
-    console.log('client', el.getBoundingClientRect().bottom, window.innerHeight)
     return el.getBoundingClientRect().bottom <= window.innerHeight +1;
   }
-  
+
   const trackScrolling = () => {
-    console.log('sc')
     const wrappedElement = document.getElementById('drawer-head');
     if (isBottom(wrappedElement)) {
       console.log('header bottom reached');
@@ -117,7 +111,6 @@ export default function CityDrawer(props) {
   };
 
   React.useEffect(() => {
-    // console.log('city', chCity.value)
     document.addEventListener('scroll', trackScrolling);
   }, [])
 
@@ -166,7 +159,6 @@ export default function CityDrawer(props) {
           ))}
         </List>
       </Drawer>
-      {/* <div onScroll = {(e) => handleOnScroll(e)}></div> */}
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,

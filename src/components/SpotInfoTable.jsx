@@ -96,23 +96,13 @@ export default function SpotInfoTable(props) {
             .catch(error => console.error('Error:', error))
     }
 
-    const handleOnScroll = (e) => {
-        console.log('scrolling')
-        const target = e.target
-        if(target.scrollHeight - target.scrollTop === target.clientHeight) {
-          console.log('BOTTOM', target.scrollHeight, target.scrollTop, target.clientHeight)
-        }
-        
-      }
-
-
     React.useEffect(() => {
         getSpots()
     }, [cityName])
 
     return (
         <TableContainer component={Paper}>
-            <div onScroll = {(e) => handleOnScroll(e)}>
+            <div>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
