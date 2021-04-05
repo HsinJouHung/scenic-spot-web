@@ -76,7 +76,7 @@ export default function SpotInfoTable(props) {
     const rows = useSelector(state => state.scenicSpotList)
 
     const dispatch = useDispatch()
-    const [getTop, setGetTop] = useState(30)
+    const getTop = 30
     var getSkip = 0
 
     const requestOptions = {
@@ -121,10 +121,6 @@ export default function SpotInfoTable(props) {
     useEffect(() => {
         window.scrollTo(0, 0)
         getSpots(getTop, getSkip)
-    }, [])
-
-    useEffect(() => {
-        // document.addEventListener('scroll', trackScrolling);
     }, [])
 
     return (

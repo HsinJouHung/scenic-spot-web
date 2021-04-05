@@ -17,7 +17,6 @@ function App() {
     <div className="App">
       <Router>
       <Redirect from = '/' to = '/scenicSpot'/>
-        {/* <Navigation /> */}
         <Switch>
           {Object.entries(cities).map(([key, value]) => {
             return (
@@ -25,7 +24,6 @@ function App() {
             )}) }
           <Route path="/scenicSpot" exact component={() => <Home />} />
         </Switch>
-        {/* <Footer /> */}
       </Router>
     </div>
   );
