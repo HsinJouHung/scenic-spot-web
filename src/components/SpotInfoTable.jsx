@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useSelector, useDispatch } from 'react-redux';
-import { setScenicSpotList } from "../actions";
+import { addScenicSpotList, setScenicSpotList } from "../actions";
 
 
 const useRowStyles = makeStyles({
@@ -51,20 +51,20 @@ function Row(props) {
             <TableRow className={classes.smallTable}>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Open Time</TableCell>
-                                        <TableCell>Address</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell component="th" scope="row" width='200px'>{row.OpenTime}</TableCell>
-                                        <TableCell component="th" scope="row">{row.Address}</TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
+                        <Table size="small" aria-label="purchases">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Open Time</TableCell>
+                                    <TableCell>Address</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell component="th" scope="row" width='200px'>{row.OpenTime}</TableCell>
+                                    <TableCell component="th" scope="row">{row.Address}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
                     </Collapse>
                 </TableCell>
             </TableRow>
@@ -77,55 +77,64 @@ export default function SpotInfoTable(props) {
 
     const dispatch = useDispatch()
     const [getTop, setGetTop] = useState(30)
-    const [getSkip, setGetSkip] = useState(0)
+    var getSkip = 0
 
     const requestOptions = {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
     };
-    
-    const cityName = useSelector(state => state.currCity)
+
+    const cityName = props.city
     const cityPath = cityName === '' ? '' : `/${cityName}`
-    
-    const getSpots = () => {
-        fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=${getTop}&$skip=${getSkip}&$format=JSON`, requestOptions)
+
+    const getSpots = (top, skip) => {
+        fetch(`https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot${cityPath}?$top=${top}&$skip=${skip}&$format=JSON`, requestOptions)
             .then(res => res.json())
             .then(data => {
-                dispatch(setScenicSpotList(data))
+                console.log(data, skip)
+                if (skip === 0) {
+                    dispatch(setScenicSpotList(data))
+                } else {
+                    if(data !== []) {
+                        dispatch(addScenicSpotList(data))
+                    }
+                }
             })
             .catch(error => console.error('Error:', error))
+        document.addEventListener('scroll', trackScrolling);
     }
 
     var isBottom = (el) => {
-        return el.getBoundingClientRect().bottom <= window.innerHeight +1;
-      }
-    
-      const trackScrolling = () => {
-        const wrappedElement = document.getElementById('drawer-head');
+        return el.getBoundingClientRect().bottom <= window.innerHeight + 1;
+    }
+
+    const trackScrolling = () => {
+        const wrappedElement = document.getElementById('head');
         if (isBottom(wrappedElement)) {
-          console.log('header bottom reached');
-        //   getSpots()
-          document.removeEventListener('scroll', trackScrolling);
+            document.removeEventListener('scroll', trackScrolling);
+            console.log('header bottom reached', getTop, getSkip+30);
+            getSkip += 30
+            getSpots(getTop, getSkip)
         }
-      };
+    };
 
     useEffect(() => {
-        getSpots()
-    }, [cityName])
+        window.scrollTo(0, 0)
+        getSpots(getTop, getSkip)
+    }, [])
 
     useEffect(() => {
-        document.addEventListener('scroll', trackScrolling);
-    }, [rows])
+        // document.addEventListener('scroll', trackScrolling);
+    }, [])
 
     return (
         <TableContainer component={Paper}>
-            <div>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
-                        <TableCell key = 'table-detail'/>
-                        <TableCell key = 'table-city-name'>Name</TableCell>
-                        <TableCell key = 'table-description'>Description</TableCell>
+                        <TableCell key='table-detail' />
+                        <TableCell key='table-city-name'>Name</TableCell>
+                        <TableCell key='table-description'>Description</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -134,7 +143,6 @@ export default function SpotInfoTable(props) {
                     ))}
                 </TableBody>
             </Table>
-            </div>
         </TableContainer>
     );
 }

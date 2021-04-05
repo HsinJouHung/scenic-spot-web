@@ -99,7 +99,7 @@ export default function CityDrawer(props) {
   }
 
   return (
-    <div className={classes.root} id = 'drawer-head'>
+    <div className={classes.root}>
       <CssBaseline />
       <AppBar
         position="fixed"

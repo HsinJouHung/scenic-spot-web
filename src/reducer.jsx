@@ -39,6 +39,13 @@ const reducer = (state = initState, { type, payload }) => {
                 scenicSpotList: newlist
             }
         }
+        case types.ADD_SCENIC_SPOT_LIST: {
+            let newlist = [...state.scenicSpotList, ...payload]
+            return {
+                ...state,
+                scenicSpotList: newlist
+            }
+        }
         case types.SET_CURR_CITY: {
             let newCity = payload
             return {

@@ -14,7 +14,7 @@ function Home(props) {
   }, [])
 
   return (
-    <div className="home">
+    <div className="home" id = 'head'>
       {/* <h2>{cityName}</h2> */}
       <CityDrawer city = {props.city}/> 
       {/* <h1>hello world!</h1> */}
